@@ -23,14 +23,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	@Autowired
     private JwtUtil jwtUtil;
 	
-
+	@Autowired
     private MyUserDetailsService userDetailsService;
     
     public JwtAuthenticationFilter() {};
 	
-	public JwtAuthenticationFilter(MyUserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+	
 
 	@Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -61,6 +59,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+        
+        System.out.println("Auth header: " + authHeader);
+        System.out.println("Extracted username: " + username);
+        System.out.println("Authentication before setting: " + SecurityContextHolder.getContext().getAuthentication());
 
         filterChain.doFilter(request, response);
     }
