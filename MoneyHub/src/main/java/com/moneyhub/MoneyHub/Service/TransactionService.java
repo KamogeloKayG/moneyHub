@@ -3,7 +3,7 @@ package com.moneyhub.MoneyHub.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,11 +113,11 @@ public class TransactionService {
 		return transRepo.getTotalExpenseByUser(user);
 	}
 	
-	List<TransactionDTO> findByUserAndDateBetweenOrderByDateDesc(Long userId, LocalDateTime startDate, LocalDateTime endDate){
+	public List<TransactionDTO> findByUserAndDateBetweenOrderByDateDesc(Long userId, LocalDateTime startDate, LocalDateTime endDate){
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new RuntimeException("User not found"));
 		
-		List<Transaction> transactions = transRepo.findByUserAndDateBetweenOrderByDateDesc(user, startDate, endDate);
+		List<Transaction> transactions = transRepo.findByUserAndDateCreatedBetweenOrderByDateCreatedDesc(user, startDate, endDate);
 		
 		return transactions.stream()
 				.map(this::convertToDto)

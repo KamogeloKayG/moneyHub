@@ -17,10 +17,13 @@ import com.moneyhub.MoneyHub.Enum.TransactionType;
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Long>{
 	
+	//Find all transactions by user
 	public List<Transaction> findByUserOrderByDateCreatedDesc(User user);
+	
+	// Find by user and type
 	public List<Transaction> findByUserAndTypeOrderByDateCreatedDesc(User user, TransactionType type);
 	
-	//
+	// Find transactions by type - INCOME or EXPENSE
 	public List<Transaction> findByTypeOrderByDateCreatedDesc(TransactionType type);
 	
 	// Find transactions by user and category
@@ -31,7 +34,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 	
     
     // Find transactions by date range
-    List<Transaction> findByUserAndDateBetweenOrderByDateDesc(User user, LocalDateTime startDate, LocalDateTime endDate);
+    List<Transaction> findByUserAndDateCreatedBetweenOrderByDateCreatedDesc(User user, LocalDateTime startDate, LocalDateTime endDate);
 	
 	@Query(
 		"SELECT COALESCE(SUM(t.amount), 0) "

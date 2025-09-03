@@ -1,5 +1,6 @@
 package com.moneyhub.MoneyHub.Controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moneyhub.MoneyHub.DTO.TransactionDTO;
@@ -46,7 +48,7 @@ public class TransactionController {
 	}
 	
 	@PutMapping("/{id}/user/{userId}")
-	public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") Long id, TransactionDTO transaction,@PathVariable("userId") Long userId){
+	public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") Long id, @RequestBody TransactionDTO transaction,@PathVariable("userId") Long userId){
 		try {
 			TransactionDTO updated = tranServ.updateTransaction(id, transaction, userId);
 			return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -70,10 +72,19 @@ public class TransactionController {
 	public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transaction, @PathVariable("userId") Long userId) {
 		try {
 			TransactionDTO savedTransaction = tranServ.createTransaction(transaction, userId);
-			return new ResponseEntity<>(transaction, HttpStatus.OK);
+			return new ResponseEntity<>(savedTransaction, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
+	}
+	
+	@GetMapping("/user/{userId}/filterbydate")
+	public ResponseEntity<List<TransactionDTO>> getAllByUserAndDateBetween(@PathVariable Long userId, @RequestParam  LocalDateTime startDate, @RequestParam LocalDateTime endDate){
+		try {
+			return new ResponseEntity<>(tranServ.findByUserAndDateBetweenOrderByDateDesc(userId, startDate, endDate), HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 }
