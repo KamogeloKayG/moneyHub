@@ -1,6 +1,7 @@
 package com.moneyhub.MoneyHub.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -12,14 +13,25 @@ import com.moneyhub.MoneyHub.Entity.Transaction;
 import com.moneyhub.MoneyHub.Entity.User;
 import com.moneyhub.MoneyHub.Enum.TransactionType;
 
+
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Long>{
 	
 	public List<Transaction> findByUserOrderByDateCreatedDesc(User user);
 	public List<Transaction> findByUserAndTypeOrderByDateCreatedDesc(User user, TransactionType type);
+	
+	//
 	public List<Transaction> findByTypeOrderByDateCreatedDesc(TransactionType type);
+	
+	// Find transactions by user and category
 	public List<Transaction> findByUserAndCategoryOrderByDateCreatedDesc(User user, String category);
+	
+	// Find transactions by category
 	public List<Transaction> findByCategoryOrderByDateCreatedDesc(String category);
+	
+    
+    // Find transactions by date range
+    List<Transaction> findByUserAndDateBetweenOrderByDateDesc(User user, LocalDateTime startDate, LocalDateTime endDate);
 	
 	@Query(
 		"SELECT COALESCE(SUM(t.amount), 0) "

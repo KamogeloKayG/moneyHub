@@ -1,5 +1,7 @@
 package com.moneyhub.MoneyHub.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +99,30 @@ public class TransactionService {
 				.toList();
 	}
 	
+	public BigDecimal getTotalIncomeByUser(Long userId) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found"));
+
+		return transRepo.getTotalIncomeByUser(user);
+	}
 	
+	public BigDecimal getTotalExpenseByUser(Long userId) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found"));
+
+		return transRepo.getTotalExpenseByUser(user);
+	}
+	
+	List<TransactionDTO> findByUserAndDateBetweenOrderByDateDesc(Long userId, LocalDateTime startDate, LocalDateTime endDate){
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found"));
+		
+		List<Transaction> transactions = transRepo.findByUserAndDateBetweenOrderByDateDesc(user, startDate, endDate);
+		
+		return transactions.stream()
+				.map(this::convertToDto)
+				.toList();
+	}
 	
 	
 	private TransactionDTO convertToDto(Transaction entity) {
