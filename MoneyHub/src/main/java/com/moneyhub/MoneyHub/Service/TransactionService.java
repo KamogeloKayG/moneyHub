@@ -70,7 +70,7 @@ public class TransactionService {
 	}
 	
 	public TransactionDTO updateTransaction(Long id, TransactionDTO transactiondto, Long userId) {
-		Transaction transaction = transRepo.findById(userId)
+		Transaction transaction = transRepo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Transaction not found"));
 		
 		if(transaction.getUser().getId().equals(userId)) {
@@ -104,6 +104,20 @@ public class TransactionService {
 				.orElseThrow(() -> new RuntimeException("User not found"));
 
 		return transRepo.getTotalIncomeByUser(user);
+	}
+	
+	public void deleteById(Long id, Long userId) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found"));
+		
+		Transaction transaction = transRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Transaction not found"));
+		
+		if(!transaction.getUser().getId().equals(user.getId())) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		transRepo.deleteById(id);
 	}
 	
 	public BigDecimal getTotalExpenseByUser(Long userId) {
