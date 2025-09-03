@@ -42,6 +42,7 @@ public class SavingPlan {
 	
     @Column(name = "target_date")
     private LocalDate targetDate;
+    
 
     @Enumerated(EnumType.STRING)
     @Column(name = "saving_frequency")
@@ -58,10 +59,10 @@ public class SavingPlan {
     private Boolean isActive = true;
     
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime dateCreated;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime dateUpdated;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -69,12 +70,20 @@ public class SavingPlan {
     
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+    	dateCreated = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    	dateUpdated = LocalDateTime.now();
+    }
+    
+    public boolean isGoalReached() {
+        return currentAmount.compareTo(goalAmount) >= 0;
+    }
+    
+    public BigDecimal getRemainingAmount() {
+        return goalAmount.subtract(currentAmount);
     }
     
 }
