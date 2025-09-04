@@ -96,7 +96,7 @@ public class SavingPlanService {
 	            .orElseThrow(() -> new RuntimeException("Plan not found"));
 
 	    if (!saved.getUser().getId().equals(user.getId())) {
-	        throw new RuntimeException("You are not allowed to delete this plan");
+	        throw new RuntimeException("Access Denied");
 	    }
 
 	    saveRepo.deleteById(id);
@@ -128,7 +128,7 @@ public class SavingPlanService {
 	            .orElseThrow(() -> new RuntimeException("Plan not found"));
 	    
 	    if(!saved.getUser().getId().equals(user.getId())) {
-	    	throw new RuntimeException("You are not allowed to add to goal");
+	    	throw new RuntimeException("Access Denied");
 	    }
 	    
 	    BigDecimal newAmount = saved.getCurrentAmount().add(amountToAdd);

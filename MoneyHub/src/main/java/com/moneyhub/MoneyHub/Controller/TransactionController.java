@@ -27,13 +27,23 @@ public class TransactionController {
 	@Autowired
 	TransactionService tranServ;
 	
-	@GetMapping
+	@GetMapping("/admin")
 	public ResponseEntity<List<TransactionDTO>> getAllTransactions(){
 		try {
 			List<TransactionDTO> transactions = tranServ.findAll();
 			return new ResponseEntity<>(transactions, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id){
+		try {
+			TransactionDTO transaction = tranServ.findById(id);
+			return new ResponseEntity<>(transaction, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -88,7 +98,7 @@ public class TransactionController {
 		}catch(RuntimeException e) {
 			if (e.getMessage().equals("Transaction not found")) {
                 return ResponseEntity.notFound().build();
-            } else if (e.getMessage().equals("Access denied")) {
+            } else if (e.getMessage().equals("Access Denied")) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             return ResponseEntity.badRequest().build();
