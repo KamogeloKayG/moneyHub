@@ -27,6 +27,11 @@ public class UserService {
 		return user;
 	}
 	
+	public Optional<User> findByEmail(String email) {
+		Optional<User> user = userRep.findByEmail(email);
+		return user;
+	}
+	
 	public void DeleteById(long id) {
 		userRep.deleteById(id);
 	}
